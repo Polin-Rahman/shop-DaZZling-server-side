@@ -29,8 +29,8 @@ async function run() {
         //GET products API
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find({});
-            const services = await cursor.toArray();
-            res.send(services);
+            const products = await cursor.toArray();
+            res.send(products);
         });
 
         //POST user API
@@ -96,13 +96,9 @@ async function run() {
         //PUT user admin API
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
-
             const filter = { email: user.email };
-
             const updateDoc = { $set: { role: 'admin' } };
-
             const result = await usersCollection.updateOne(filter, updateDoc);
-
             res.json(result);
         });
 
@@ -137,6 +133,21 @@ async function run() {
             };
             const result = await orderCollection.updateOne(filter, updateDoc, options)
             res.json(result)
+        });
+
+        //Add new product API
+        app.post('/addProduct', async (req, res) => {
+            const order = req.body;
+            const result = await productsCollection.insertOne(order);
+            res.json(result);
+        });
+
+        //DELETE product API
+        app.delete('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollection.deleteOne(query);
+            res.json(result);
         });
 
     }
