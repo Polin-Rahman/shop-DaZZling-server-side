@@ -150,6 +150,13 @@ async function run() {
             res.json(result);
         });
 
+        //GET reviews API
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
     }
     finally {
         //await client.close();
